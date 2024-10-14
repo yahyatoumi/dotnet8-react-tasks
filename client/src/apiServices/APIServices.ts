@@ -12,7 +12,8 @@ const config: AxiosRequestConfig = {
 
 interface ReturnType {
     status: number; // status should always be a number
-    data: any;
+    data?: any;
+    error?: any;
 }
 
 // --------------------------- POST request ------------------------------ //
@@ -33,7 +34,7 @@ export const postAPI = async (url: string, data: unknown): Promise<ReturnType> =
         .catch((error: AxiosError) => {
             return {
                 status: error.response?.status || 0, // Fallback to 0 if status is undefined
-                data: error.response || null, // If error.response is undefined, return null
+                error: error || null, // If error.response is undefined, return null
             };
         });
 };
@@ -64,7 +65,7 @@ export const getAPI = async (url: string, data?: unknown): Promise<ReturnType> =
 
             return {
                 status: error.response?.status || 0, // Fallback to 0 if status is undefined
-                data: error.response || null, // If error.response is undefined, return null
+                error: error || null, // If error.response is undefined, return null
             };
         });
 };
@@ -87,7 +88,7 @@ export const putAPI = async (url: string, data: unknown, id?: number): Promise<R
         .catch((error: AxiosError) => {
             return {
                 status: error.response?.status || 0, // Fallback to 0 if status is undefined
-                data: error.response || null, // If error.response is undefined, return null
+                error: error || null, // If error.response is undefined, return null
             };
         });
 };
@@ -110,7 +111,7 @@ export const deleteAPI = async (url: string, data?: unknown): Promise<ReturnType
         .catch((error: AxiosError) => {
             return {
                 status: error.response?.status || 0, // Fallback to 0 if status is undefined
-                data: error.response || null, // If error.response is undefined, return null
+                error: error || null, // If error.response is undefined, return null
             };
         });
 };

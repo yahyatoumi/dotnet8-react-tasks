@@ -53,22 +53,25 @@ public class TicketController : ControllerBase
 
     // Read all tickets with pagination
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets(int pageNumber = 1, int pageSize = 10)
+    public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets(int page = 1, int pageSize = 10)
     {
         // Ensure page number and size are valid
-        if (pageNumber <= 0 || pageSize <= 0)
+        if (page <= 0 || pageSize <= 0)
         {
             return BadRequest("Page number and size must be greater than zero.");
         }
 
+        Console.WriteLine($"Page: {page}, PageSize: {pageSize}");
+
+
         var totalItems = await _context.Tickets.CountAsync();
         var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-        string nextPageUrl = pageNumber < totalPages ? $"?pageNumber={pageNumber + 1}&pageSize={pageSize}" : "";
-        string prevPageUrl = pageNumber > 1 ? $"?pageNumber={pageNumber - 1}&pageSize={pageSize}" : "";
+        string nextPageUrl = page < totalPages ? $"?page={page + 1}&pageSize={pageSize}" : "";
+        string prevPageUrl = page > 1 ? $"?page={page - 1}&pageSize={pageSize}" : "";
 
         // Skip the previous pages and take only the current page's tickets
         var tickets = await _context.Tickets
-            .Skip((pageNumber - 1) * pageSize)
+            .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
 
@@ -80,13 +83,13 @@ public class TicketController : ControllerBase
 
         var response = new PaginatedResponse<Ticket>
         {
-            TotalItems = 0,
-            TotalPages = 0,
-            PageNumber = pageNumber,
+            TotalItems = totalItems,
+            TotalPages = totalPages,
+            PageNumber = page,
             PageSize = pageSize,
             NextPageUrl = nextPageUrl,
             PrevPageUrl = prevPageUrl,
-            Items = tickets
+            Items = tickets,
         };
 
         // Return the paginated result
