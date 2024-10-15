@@ -2,13 +2,15 @@ import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from "./counter/counterSlice"
 import paginationParamsReducer from "./paginationParams/paginationParamsSlice";
 import newlyCreatedTicketsReducer from './newlyCreatedTickets/newlyCreatedTicketsSlice';
+import searchTicketsReducer from './searchTickets/searchTicketsSlice';
 
 export const makeStore = () => {
     return configureStore({
         reducer: {
             counter: counterReducer,
             paginationParams: paginationParamsReducer,
-            newlyCreatedTickets: newlyCreatedTicketsReducer
+            newlyCreatedTickets: newlyCreatedTicketsReducer,
+            searchTickets: searchTicketsReducer
         }
     })
 }

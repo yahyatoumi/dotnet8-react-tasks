@@ -50,7 +50,22 @@ export const deleteTicket = async (id: string) => {
 
 export const updateTicket = async (id: string, data: PostNewTicketData) => {
     const res = await putAPI(`ticket/${id}`, data);
-    if (res.status === 202) {
+    if (res.status === 204) {
+        console.log("rrrs", res)
+        return res.data;
+    } else {
+        return {
+            error: true,
+            message: 'Failed to retrieve tickets.',
+            status: res.status,
+        };
+    }
+}
+
+export const searchForTickets = async (searchValue: string) => {
+    if (!searchValue.trim()) return [];
+    const res = await getAPI("search", { searchValue });
+    if (res.status === 200) {
         console.log("rrrs", res)
         return res.data;
     } else {

@@ -4,6 +4,7 @@ interface Ticket{
     status: "Closed" | "Open";
     dateCreated: string;
     newlyCreated: boolean;
+    searchedFor: boolean;
 }
 
 interface PaginatedResponseType

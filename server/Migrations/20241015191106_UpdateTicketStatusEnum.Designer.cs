@@ -11,8 +11,8 @@ using TicketApi.Models;
 namespace server.Migrations
 {
     [DbContext(typeof(TicketContext))]
-    [Migration("20241015094523_AddDateCreatedToTickets")]
-    partial class AddDateCreatedToTickets
+    [Migration("20241015191106_UpdateTicketStatusEnum")]
+    partial class UpdateTicketStatusEnum
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,9 +33,8 @@ namespace server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

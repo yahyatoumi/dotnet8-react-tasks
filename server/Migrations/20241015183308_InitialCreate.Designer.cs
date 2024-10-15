@@ -11,7 +11,7 @@ using TicketApi.Models;
 namespace server.Migrations
 {
     [DbContext(typeof(TicketContext))]
-    [Migration("20241014131731_InitialCreate")]
+    [Migration("20241015183308_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -26,7 +26,7 @@ namespace server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("DateCreated")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")

@@ -21,9 +21,18 @@ const newlyCreatedTicketsSlice = createSlice({
         removeFromNewlyCreated: (state, action) => {
             const newState = state.filter((ticket: Ticket) => ticket.id !== action.payload.id)
             return newState;
+        },
+        updateSingleTicket: (state, action) => {
+            const newState = state.map((ticket: Ticket) => ticket.id === action.payload.id ? action.payload : ticket)
+            return newState;
         }
     }
 })
 
-export const { setNewlyCreatedTickets, addNewlyCreatedTicket, removeFromNewlyCreated } = newlyCreatedTicketsSlice.actions
+export const {
+    setNewlyCreatedTickets,
+    addNewlyCreatedTicket,
+    removeFromNewlyCreated,
+    updateSingleTicket
+} = newlyCreatedTicketsSlice.actions
 export default newlyCreatedTicketsSlice.reducer

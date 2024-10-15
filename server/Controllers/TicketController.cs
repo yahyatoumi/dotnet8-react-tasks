@@ -33,11 +33,6 @@ public class TicketController : ControllerBase
             return BadRequest("ID should not be provided for new tickets. The ID will be auto-generated.");
         }
 
-        // Ensure that the status is either 'Open' or 'Closed'
-        if (ticket.Status != "Open" && ticket.Status != "Closed")
-        {
-            return UnprocessableEntity("The status must be either 'Open' or 'Closed'.");
-        }
         ticket.DateCreated = DateTime.UtcNow;
 
         _context.Tickets.Add(ticket);
@@ -79,10 +74,10 @@ public class TicketController : ControllerBase
 
         // Skip the previous pages and take only the current page's tickets
         var tickets = await _context.Tickets
-    .OrderByDescending(t => t.DateCreated) // Sort by DateCreated in descending order
-    .Skip((page - 1) * pageSize)
-    .Take(pageSize)
-    .ToListAsync();
+         .OrderByDescending(t => t.DateCreated) // Sort by DateCreated in descending order
+         .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+         .ToListAsync();
 
         var response = new PaginatedResponse<Ticket>
         {
@@ -108,11 +103,9 @@ public class TicketController : ControllerBase
         {
             return NotFound();
         }
-        ticket.Id = id;
-        ticket.DateCreated = existingTicket.DateCreated;
-        Console.WriteLine($"hererrrrr ${ticket.DateCreated}");
+        existingTicket.Description = ticket.Description;
+        existingTicket.Status = ticket.Status;
 
-        _context.Entry(ticket).State = EntityState.Modified;
         await _context.SaveChangesAsync();
 
         return NoContent();

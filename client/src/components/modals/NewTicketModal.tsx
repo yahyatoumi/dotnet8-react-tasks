@@ -1,7 +1,7 @@
 import { postNewTicket } from "@/apiServices/tasks";
 import { useAppDispatch } from "@/lib/hooks";
 import { addNewlyCreatedTicket } from "@/lib/newlyCreatedTickets/newlyCreatedTicketsSlice";
-import { FC, FormEvent, FormEventHandler, useRef, useState } from "react";
+import { FC, FormEvent, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5"
 
 interface NewTicketModalProps {
@@ -36,6 +36,7 @@ const NewTicketModal: FC<NewTicketModalProps> = ({ closeModal }) => {
         if (!res.error) {
             console.log("newwwww", res)
             dispatch(addNewlyCreatedTicket(res));
+            closeModal();
         }
     }
 
@@ -72,6 +73,7 @@ const NewTicketModal: FC<NewTicketModalProps> = ({ closeModal }) => {
                 <label className="flex flex-col min-w-40 flex-1">
                     <p className={`${decriptionError ? "text-[#C13515]" : "text-black "} text-base font-medium leading-normal pb-2`}>Ticket Description*</p>
                     <textarea
+                        autoFocus
                         onBlur={handleDescriptionBlur}
                         placeholder="Description"
                         className="flex w-full min-w-0 flex-1 overflow-y-auto resize-none overflow-hidden rounded-xl text-black focus:outline-none focus:ring-0 border-none bg-[#EEEEEE] h-14 placeholder:text-[#6B6B6B] p-4 text-base font-normal leading-normal"
