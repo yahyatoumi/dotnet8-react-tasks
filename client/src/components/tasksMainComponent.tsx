@@ -8,28 +8,13 @@ import { useAppDispatch, useAppSelector, useAppStore } from "@/lib/hooks";
 import { increment } from "@/lib/counter/counterSlice";
 import { setPaginationParams } from "@/lib/paginationParams/paginationParamsSlice";
 import { parseDate, timeAgo } from "@/helpers/dateParser";
-
-const ActionsPopUp = ({ ticket }: { ticket: Ticket }) => {
-    const [displayActions, setDisplayActions] = useState(false);
-
-    return <td className="table-a4630dc8-57ae-40a7-a866-f03df63aa39e-column-480 h-[72px] md:px-4 px-2 py-2 text-[#6B6B6B] text-sm font-normal leading-normal">
-        <div className="relative">
-            <div onClick={() => setDisplayActions(!displayActions)} className="cursor-pointer  text-lg font-semibold h-fit">
-                ...
-            </div>
-            {
-                displayActions && <div className="absolute bottom-full right-0 bg-white rounded shadow">
-                    <div>Delete</div>
-                    <div>Update</div>
-                </div>
-            }
-        </div>
-    </td>
-}
+import { CiEdit } from "react-icons/ci";
+import TicketActionsPopUp from "./ui/TicketActionsPopUp";
 
 const TasksMainComponent = () => {
     const paginationParams = useAppSelector((state) => state.paginationParams)
     const counter = useAppSelector(state => state.counter)
+    const newlyCreatedTickets = useAppSelector(state => state.newlyCreatedTickets)
     const dispatch = useAppDispatch()
 
 
@@ -71,46 +56,87 @@ const TasksMainComponent = () => {
     });
 
 
-    return <div className="px-4 py-3 @container">
-        <div className="flex overflow-hidden rounded-xl border border-[#DEDEDE] bg-[#FFFFFF]">
-            <table className="flex-1">
+    return <div className="sm:px-4 py-3">
+        <div className="overflow-hidden sm:rounded-xl border border-[#DEDEDE] bg-[#FFFFFF]">
+            <table className="table-auto w-full px-1">
                 <thead>
-                    <tr className="bg-[#FFFFFF]">
-                        <th className="table-a4630dc8-57ae-40a7-a866-f03df63aa39e-column-120 px-4 py-3 text-left text-black w-[400px] text-sm font-medium leading-normal">Ticket ID</th>
-                        <th className="table-a4630dc8-57ae-40a7-a866-f03df63aa39e-column-240 px-4 py-3 text-left text-black w-[400px] text-sm font-medium leading-normal">Description</th>
-                        <th className="table-a4630dc8-57ae-40a7-a866-f03df63aa39e-column-360 px-4 py-3 text-left text-black w-60 text-sm font-medium leading-normal">Status</th>
-                        <th className="table-a4630dc8-57ae-40a7-a866-f03df63aa39e-column-480 px-4 py-3 text-left text-black w-[400px] text-sm font-medium leading-normal">Date</th>
+                    <tr className="bg-black h-14">
+                        <th className="text-white text-sm font-medium leading-normal text-center w-[3/20]">ID</th>
+                        <th className="text-white md:px-4 text-sm font-medium leading-normal text-left w-[7/20]">Description</th>
+                        <th className="text-white text-sm font-medium leading-normal text-center w-[2/20]">Status</th>
+                        <th className="text-white text-sm font-medium leading-normal text-center w-[4/20]">Date</th>
+                        <th className="text-white text-sm font-medium leading-normal text-center w-[4/20]">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        data?.items.map((ticket: Ticket) => {
-                            return <tr key={ticket.id} className="border-t border-t-[#DEDEDE]">
-                                <td className="table-a4630dc8-57ae-40a7-a866-f03df63aa39e-column-120 h-[72px] md:px-4 px-2 py-2 w-[300px] md:w-[400px] text-[#6B6B6B] text-sm font-normal leading-normal">{ticket.id}</td>
-                                <td className="table-a4630dc8-57ae-40a7-a866-f03df63aa39e-column-240 h-[72px] md:px-4 px-2 py-2 w-[300px] md:w-[400px] text-black text-sm font-normal leading-normal">
+                    {newlyCreatedTickets?.map((ticket: Ticket) => (
+                        <tr key={ticket.id} className="border-t border-t-[#DEDEDE] bg-green-100">
+                            <td className="h-[72px] text-center px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[3/20]">
+                                {ticket.id}
+                            </td>
+                            <td className="h-[72px] md:px-4 px-1 py-2 w-[7/20] break-words text-black text-sm font-normal leading-normal overflow-hidden">
+                                <div
+                                    style={{
+                                        maxWidth: "100px",
+                                        minWidth: "50px",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                    }}
+                                    className="overflow-hidden line-clamp-3 truncate">
                                     {ticket.description}
-                                </td>
-                                <td className="table-a4630dc8-57ae-40a7-a866-f03df63aa39e-column-360 h-[72px] md:px-4 px-2 py-2 w-60 text-sm font-normal leading-normal">
-                                    <button
-                                        className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 md:px-4 px-2 bg-[#EEEEEE] text-black text-sm font-medium leading-normal w-full"
-                                    >
-                                        <span className="truncate">{ticket.status}</span>
-                                    </button>
-                                </td>
-                                <td className="hidden md:table-cell table-a4630dc8-57ae-40a7-a866-f03df63aa39e-column-480 h-[72px] md:px-4 px-2 py-2 w-[300px] md:w-[400px] text-[#6B6B6B] text-sm font-normal leading-normal">
-                                    {parseDate(ticket.date)}
-                                </td>
-                                <td className="md:hidden table-a4630dc8-57ae-40a7-a866-f03df63aa39e-column-480 h-[72px] md:px-4 px-2 py-2 w-[300px] md:w-[400px] text-[#6B6B6B] text-sm font-normal leading-normal">
-                                    {timeAgo(ticket.date)}
-                                </td>
-                                <ActionsPopUp ticket={ticket} />
-                            </tr>
-                        })
-                    }
+                                </div>
+                            </td>
+                            <td className="h-[72px] px-1 py-2 text-sm font-normal leading-normal w-[2/20]">
+                                <button className="flex items-center justify-center overflow-hidden rounded-xl h-8 md:px-4 px-1.5 bg-[#EEEEEE] text-black text-xs md:text-sm font-medium leading-normal w-full">
+                                    <span className="truncate">{ticket.status}</span>
+                                </button>
+                            </td>
+                            <td className="hidden text-center h-[72px] px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[4/20] md:table-cell">
+                                {parseDate(ticket.dateCreated)}
+                            </td>
+                            <td className="text-center h-[72px] px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[4/20] md:hidden">
+                                {timeAgo(ticket.dateCreated)}
+                            </td>
+                            <TicketActionsPopUp ticket={ticket} />
+                        </tr>
+                    ))}
+                    {data?.items.map((ticket: Ticket) => (
+                        <tr key={ticket.id} className="border-t border-t-[#DEDEDE]">
+                            <td className="h-[72px] text-center px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[3/20]">
+                                {ticket.id}
+                            </td>
+                            <td className="h-[72px] md:px-4 px-1 py-2 w-[7/20] break-words text-black text-sm font-normal leading-normal overflow-hidden">
+                                <div
+                                    style={{
+                                        maxWidth: "100px",
+                                        minWidth: "50px",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                    }}
+                                    className="overflow-hidden line-clamp-3 truncate">
+                                    {ticket.description}
+                                </div>
+                            </td>
+                            <td className="h-[72px] px-1 py-2 text-sm font-normal leading-normal w-[2/20]">
+                                <button className="flex items-center justify-center overflow-hidden rounded-xl h-8 md:px-4 px-1.5 bg-[#EEEEEE] text-black text-xs md:text-sm font-medium leading-normal w-full">
+                                    <span className="truncate">{ticket.status}</span>
+                                </button>
+                            </td>
+                            <td className="hidden text-center h-[72px] px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[4/20] md:table-cell">
+                                {parseDate(ticket.dateCreated)}
+                            </td>
+                            <td className="text-center h-[72px] px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[4/20] md:hidden">
+                                {timeAgo(ticket.dateCreated)}
+                            </td>
+                            <TicketActionsPopUp ticket={ticket} />
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>
-    </div>
+    </div >
 }
 
 export default TasksMainComponent;

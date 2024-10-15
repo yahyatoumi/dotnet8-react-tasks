@@ -18,34 +18,34 @@ export const timeAgo = (dateString: string) => {
 
     if (diffInSeconds < 60) {
         if (diffInSeconds <= 1) return "just now";
-        return `${diffInSeconds} s ago`;
+        return `${diffInSeconds} s`;
     }
 
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     if (diffInMinutes < 60) {
-        if (diffInMinutes === 1) return "1 minute ago";
-        return `${diffInMinutes} min ago`;
+        if (diffInMinutes === 1) return "1 min";
+        return `${diffInMinutes} min`;
     }
 
     const diffInHours = Math.floor(diffInMinutes / 60);
     if (diffInHours < 24) {
-        if (diffInHours === 1) return "1 hour ago";
-        return `${diffInHours} h ago`;
+        if (diffInHours === 1) return "1 h";
+        return `${diffInHours} h`;
     }
 
     const diffInDays = Math.floor(diffInHours / 24);
     if (diffInDays < 30) {
-        if (diffInDays === 1) return "1 day ago";
-        return `${diffInDays} days ago`;
+        if (diffInDays === 1) return "1 day";
+        return `${diffInDays} days`;
     }
 
     const diffInMonths = Math.floor(diffInDays / 30);
     if (diffInMonths < 12) {
-        if (diffInMonths === 1) return "1 month ago";
-        return `${diffInMonths} mon ago`;
+        if (diffInMonths === 1) return "1 mon";
+        return `${diffInMonths} mon`;
     }
 
     const diffInYears = Math.floor(diffInMonths / 12);
-    if (diffInYears === 1) return "1 year ago";
-    return `${diffInYears} y ago`;
+    if (diffInYears === 1) return "1 y";
+    return `${diffInYears} y`;
 }

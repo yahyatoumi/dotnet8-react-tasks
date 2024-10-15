@@ -1,22 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface PaginationParamsType {
+    page: number,
+    pageSize: number
+}
 
-
-const initialState = {
+const initialState: PaginationParamsType = {
     page: 0,
     pageSize: 10
 }
 
-const currentProjectSlice = createSlice({
+const paginationParamsSlice = createSlice({
     name: 'paginationParams',
     initialState,
     reducers: {
         setPaginationParams: (state, action) => {
-            console.log("TATEEEE", action.payload)
             return action.payload;
         },
     }
 })
 
-export const { setPaginationParams } = currentProjectSlice.actions
-export default currentProjectSlice.reducer
+export const { setPaginationParams } = paginationParamsSlice.actions
+export default paginationParamsSlice.reducer

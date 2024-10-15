@@ -7,6 +7,6 @@ namespace TicketApi.Models
         public int Id { get; set; }
         public string Description { get; set; } = "";
         public string Status { get; set; } = "Open";  // Open or Closed
-        public DateTime Date { get; set; }
+        public DateTime DateCreated { get; set; }
     }
 }
