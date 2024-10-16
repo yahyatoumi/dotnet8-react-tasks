@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Header from "@/components/Header";
 import SearchInput from "@/components/SearchInput";
-import Suggests from "@/components/Suggests";
+import PaginationSettings from "@/components/PaginationSettings";
 import TasksMainComponent from "@/components/TasksMainComponent";
 import Pagination from "@/components/Pagination";
 
@@ -12,7 +12,7 @@ export default function Home() {
           <div className="flex flex-col flex-1">
             <Header />
             <SearchInput />
-            <Suggests />
+            <PaginationSettings />
             <TasksMainComponent />
             <Pagination />
           </div>

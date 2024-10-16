@@ -56,6 +56,10 @@ const TasksMainComponent = () => {
         queryKey: ["pagination", paginationParams.page, paginationParams.pageSize],
     });
 
+    useEffect(() => {
+        console.log("change where fetching...", paginationParams)
+    }, [paginationParams])
+
 
     return <div className="sm:px-4 py-3">
         <div className="overflow-hidden sm:rounded-xl border border-[#DEDEDE] bg-[#FFFFFF]">
