@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setPaginationParams } from "@/lib/paginationParams/paginationParamsSlice";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const Pagination = () => {
@@ -14,10 +15,7 @@ const Pagination = () => {
         queryKey: ["pagination", paginationParams.page, paginationParams.pageSize],
     });
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        console.log("Current Data:", data);
-    }, [data]);
+    const router = useRouter()
 
     const handleNavigateToPrev = () => {
         if (paginationParams.page > 1) {
@@ -30,6 +28,15 @@ const Pagination = () => {
             dispatch(setPaginationParams({ ...paginationParams, page: paginationParams.page + 1 }));
         }
     };
+
+    const handleSaveNewPagination = (page: number) => {
+        const newPaginationState = {
+            page: page,
+            pageSize: paginationParams.pageSize
+        }
+        dispatch(setPaginationParams(newPaginationState))
+        router.push(`?page=${newPaginationState.page}&pageSize=${newPaginationState.pageSize}`)
+    }
 
     const currentPage = paginationParams.page;
     const totalPages = data?.totalPages || 1;
@@ -53,15 +60,14 @@ const Pagination = () => {
 
                 {/* Page Numbers */}
                 {pageNumbers.map((pageNumber) => (
-                    <a
+                    <div
                         key={pageNumber}
-                        onClick={() => dispatch(setPaginationParams({ ...paginationParams, page: pageNumber }))}
+                        onClick={() => handleSaveNewPagination(pageNumber)}
                         className={`text-sm font-bold leading-normal tracking-[0.015em] flex size-10 items-center justify-center rounded-full 
                             ${currentPage === pageNumber ? "bg-[#EEEEEE]" : "bg-transparent"} text-black`}
-                        href="#"
                     >
                         {pageNumber}
-                    </a>
+                    </div>
                 ))}
 
                 {/* Next Page Button */}

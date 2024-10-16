@@ -11,6 +11,7 @@ import { parseDate, timeAgo } from "@/helpers/dateParser";
 import { CiEdit } from "react-icons/ci";
 import TicketActionsPopUp from "./ui/TicketActionsPopUp";
 import NewTicketButton from "./ui/NewTicketButton";
+import SingleTicketRow from "./ui/SingleTicketRow";
 
 const TasksMainComponent = () => {
     const paginationParams = useAppSelector((state) => state.paginationParams)
@@ -18,8 +19,6 @@ const TasksMainComponent = () => {
     const searchTickets = useAppSelector(state => state.searchTickets)
     const dispatch = useAppDispatch()
 
-
-    // This useEffect will run only on the client side
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const queryPage = urlParams.get('page');
@@ -29,7 +28,6 @@ const TasksMainComponent = () => {
             pageSize: 10
         }
 
-        // If queryId is not null, parse it to a number and update the page state
         if (queryPage) {
             const pageNumber = Number(queryPage);
             if (!isNaN(pageNumber) && pageNumber > 0) {
@@ -48,17 +46,13 @@ const TasksMainComponent = () => {
             newPaginationParamsState.pageSize = 10
         }
         dispatch(setPaginationParams(newPaginationParamsState))
-    }, []); // Runs only once when the component mounts
+    }, []);
 
 
     const { data, isLoading } = useQuery({
         queryFn: () => getTicketsList(paginationParams.page, paginationParams.pageSize),
         queryKey: ["pagination", paginationParams.page, paginationParams.pageSize],
     });
-
-    useEffect(() => {
-        console.log("change where fetching...", paginationParams)
-    }, [paginationParams])
 
 
     return <div className="sm:px-4 py-3">
@@ -75,100 +69,13 @@ const TasksMainComponent = () => {
                 </thead>
                 <tbody>
                     {searchTickets?.map((ticket: Ticket) => (
-                        <tr key={ticket.id} className="border-t border-t-[#DEDEDE] bg-blue-50">
-                            <td className="h-[72px] text-center px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[3/20]">
-                                {ticket.id}
-                            </td>
-                            <td className="h-[72px] md:px-4 px-1 py-2 w-[7/20] break-words text-black text-sm font-normal leading-normal overflow-hidden">
-                                <div
-                                    style={{
-                                        maxWidth: "100px",
-                                        minWidth: "50px",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                    }}
-                                    className="overflow-hidden line-clamp-3 truncate">
-                                    {ticket.description}
-                                </div>
-                            </td>
-                            <td className="h-[72px] px-1 py-2 text-sm font-normal leading-normal w-[2/20]">
-                                <button className="flex items-center justify-center overflow-hidden rounded-xl h-8 md:px-4 px-1.5 bg-[#EEEEEE] text-black text-xs md:text-sm font-medium leading-normal w-full">
-                                    <span className="truncate">{ticket.status}</span>
-                                </button>
-                            </td>
-                            <td className="hidden text-center h-[72px] px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[4/20] md:table-cell">
-                                {parseDate(ticket.dateCreated)}
-                            </td>
-                            <td className="text-center h-[72px] px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[4/20] md:hidden">
-                                {timeAgo(ticket.dateCreated)}
-                            </td>
-                            <TicketActionsPopUp ticket={ticket} />
-                        </tr>
+                        <SingleTicketRow ticket={ticket} bgColor="bg-blue-50" />
                     ))}
                     {newlyCreatedTickets?.map((ticket: Ticket) => (
-                        <tr key={ticket.id} className="border-t border-t-[#DEDEDE] bg-green-50">
-                            <td className="h-[72px] text-center px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[3/20]">
-                                {ticket.id}
-                            </td>
-                            <td className="h-[72px] md:px-4 px-1 py-2 w-[7/20] break-words text-black text-sm font-normal leading-normal overflow-hidden">
-                                <div
-                                    style={{
-                                        maxWidth: "100px",
-                                        minWidth: "50px",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                    }}
-                                    className="overflow-hidden line-clamp-3 truncate">
-                                    {ticket.description}
-                                </div>
-                            </td>
-                            <td className="h-[72px] px-1 py-2 text-sm font-normal leading-normal w-[2/20]">
-                                <button className="flex items-center justify-center overflow-hidden rounded-xl h-8 md:px-4 px-1.5 bg-[#EEEEEE] text-black text-xs md:text-sm font-medium leading-normal w-full">
-                                    <span className="truncate">{ticket.status}</span>
-                                </button>
-                            </td>
-                            <td className="hidden text-center h-[72px] px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[4/20] md:table-cell">
-                                {parseDate(ticket.dateCreated)}
-                            </td>
-                            <td className="text-center h-[72px] px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[4/20] md:hidden">
-                                {timeAgo(ticket.dateCreated)}
-                            </td>
-                            <TicketActionsPopUp ticket={ticket} />
-                        </tr>
+                        <SingleTicketRow ticket={ticket} bgColor="bg-green-50" />
                     ))}
                     {data?.items?.map((ticket: Ticket) => (
-                        <tr key={ticket.id} className="border-t border-t-[#DEDEDE]">
-                            <td className="h-[72px] text-center px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[3/20]">
-                                {ticket.id}
-                            </td>
-                            <td className="h-[72px] md:px-4 px-1 py-2 w-[7/20] break-words text-black text-sm font-normal leading-normal overflow-hidden">
-                                <div
-                                    style={{
-                                        maxWidth: "100px",
-                                        minWidth: "50px",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                    }}
-                                    className="overflow-hidden line-clamp-3 truncate">
-                                    {ticket.description}
-                                </div>
-                            </td>
-                            <td className="h-[72px] px-1 py-2 text-sm font-normal leading-normal w-[2/20]">
-                                <button className="flex items-center justify-center overflow-hidden rounded-xl h-8 md:px-4 px-1.5 bg-[#EEEEEE] text-black text-xs md:text-sm font-medium leading-normal w-full">
-                                    <span className="truncate">{ticket.status}</span>
-                                </button>
-                            </td>
-                            <td className="hidden text-center h-[72px] px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[4/20] md:table-cell">
-                                {parseDate(ticket.dateCreated)}
-                            </td>
-                            <td className="text-center h-[72px] px-1 py-2 text-[#6B6B6B] text-sm font-normal leading-normal w-[4/20] md:hidden">
-                                {timeAgo(ticket.dateCreated)}
-                            </td>
-                            <TicketActionsPopUp ticket={ticket} />
-                        </tr>
+                        <SingleTicketRow ticket={ticket} bgColor="" />
                     ))}
                 </tbody>
             </table>
