@@ -7,19 +7,27 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 // Add services to the container.
 
 builder.Services.AddDbContext<TicketContext>(options =>
-    options.UseSqlite("Data Source=ticket.db")); // Use SQLite connection string
+    options.UseNpgsql("Host=postgres;Port=5432;Database=yahya_db;Username=yahya;Password=yahyaPASSWORD"));
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost", "http://localhost:3000")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .AllowCredentials(); // Allows credentials (cookies or tokens)
+                          policy.WithOrigins(
+                              "http://localhost:3000",     // Your Next.js frontend
+                              "http://localhost",          // General localhost access
+                              "http://localhost:8080",       // Nginx reverse proxy on port 8080
+                              "http://frontend",           // Docker container name for frontend
+                              "http://backend"             // Docker container name for backend
+                          )
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();  // To allow cookies or tokens
                       });
 });
+
+builder.WebHost.UseUrls("http://0.0.0.0:5286");
 
 
 builder.Services.AddControllers();

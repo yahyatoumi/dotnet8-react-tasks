@@ -1,0 +1,31 @@
+# Use the .NET SDK image for development
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+
+# Install the dotnet-ef tool
+RUN dotnet tool install --global dotnet-ef
+
+# Ensure the global tools path is added to the PATH environment variable
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+# Copy the csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
+
+# Copy everything else and build
+COPY . ./
+RUN dotnet build -c Debug --no-restore
+
+# Run the EF Core migrations
+# RUN dotnet ef migrations add InitialCreate
+# RUN dotnet ef database update
+
+# Expose the development port
+EXPOSE 5286
+
+# Add a script to handle migrations and start the app
+COPY ./start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# Start the application
+ENTRYPOINT ["/app/start.sh"]
