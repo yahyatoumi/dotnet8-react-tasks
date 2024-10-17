@@ -24,7 +24,7 @@ RUN dotnet build -c Debug --no-restore
 EXPOSE 5286
 
 # Add a script to handle migrations and start the app
-COPY ./start.sh /app/start.sh
+COPY ./start.dev.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
 # Start the application

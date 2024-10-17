@@ -10,10 +10,10 @@ const config: AxiosRequestConfig = {
     withCredentials: true,
 };
 
-interface ReturnType {
+interface ReturnType<T = unknown, E = unknown>  {
     status: number; // status should always be a number
-    data?: any;
-    error?: any;
+    data?: T;
+    error?: E;
 }
 
 // --------------------------- POST request ------------------------------ //

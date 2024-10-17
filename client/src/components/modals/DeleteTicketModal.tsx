@@ -17,8 +17,8 @@ const DeleteTicketModal: FC<DeleteTicketModalProps> = ({ ticket, closeModal }) =
 
 
     const handleDeleteTicket = async () => {
-        const res = await deleteTicket(ticket.id.toString());
-        if (!res.error) {
+        try{
+            await deleteTicket(ticket.id.toString());
             if (ticket.newlyCreated) {
                 dispatch(removeFromNewlyCreated(ticket))
             } else {
@@ -33,6 +33,9 @@ const DeleteTicketModal: FC<DeleteTicketModalProps> = ({ ticket, closeModal }) =
                 })
             }
             closeModal();
+        }
+        catch(e){
+            console.error("ERRRRROR:", e)
         }
     }
 

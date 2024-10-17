@@ -17,7 +17,7 @@ services:
     container_name: dotnet
     build:
       context: ./server
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     volumes:
       - ./server:/app
       - /app/bin
@@ -34,7 +34,7 @@ services:
     container_name: next
     build:
       context: ./client
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     volumes:
       - ./client:/app
       - /app/node_modules

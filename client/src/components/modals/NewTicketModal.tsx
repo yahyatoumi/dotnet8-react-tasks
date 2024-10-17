@@ -32,11 +32,13 @@ const NewTicketModal: FC<NewTicketModalProps> = ({ closeModal }) => {
             status,
         }
 
-        const res = await postNewTicket(postData)
-        if (!res.error) {
+        try{
+            const res = await postNewTicket(postData)
             console.log("newwwww", res)
             dispatch(addNewlyCreatedTicket(res));
             closeModal();
+        }catch(e){
+            console.error("ERRRRROR:", e)
         }
     }
 

@@ -1,17 +1,15 @@
 import { getAPI, postAPI, putAPI, deleteAPI } from "./APIServices";
 
 export const getTicketsList = async (page: number, pageSize = 10) => {
-    if (!page) return [];
+    if (!page) {
+        return 
+    }
     const res = await getAPI(`ticket`, { page, pageSize })
     console.log("JJJJ", res)
     if (res.status === 200) {
-        return res.data;
+        return res.data as PaginatedResponseType;
     } else {
-        return {
-            error: true,
-            message: 'Failed to retrieve tickets.',
-            status: res.status,
-        };
+        throw new Error(`Error fetching tickets: ${res.error || 'Unknown error'}`);
     }
 }
 
@@ -24,13 +22,9 @@ export const postNewTicket = async (data: PostNewTicketData) => {
     const res = await postAPI("ticket", data)
     if (res.status === 201) {
         console.log("rrrs", res)
-        return res.data;
+        return res.data as Ticket;
     } else {
-        return {
-            error: true,
-            message: 'Failed to retrieve tickets.',
-            status: res.status,
-        };
+        throw new Error(`Error fetching tickets: ${res.error || 'Unknown error'}`);
     }
 }
 
@@ -40,11 +34,7 @@ export const deleteTicket = async (id: string) => {
         console.log("rrrs", res)
         return res.data;
     } else {
-        return {
-            error: true,
-            message: 'Failed to retrieve tickets.',
-            status: res.status,
-        };
+        throw new Error(`Error fetching tickets: ${res.error || 'Unknown error'}`);
     }
 }
 
@@ -54,11 +44,7 @@ export const updateTicket = async (id: string, data: PostNewTicketData) => {
         console.log("rrrs", res)
         return res.data;
     } else {
-        return {
-            error: true,
-            message: 'Failed to retrieve tickets.',
-            status: res.status,
-        };
+        throw new Error(`Error fetching tickets: ${res.error || 'Unknown error'}`);
     }
 }
 
@@ -67,12 +53,8 @@ export const searchForTickets = async (searchValue: string) => {
     const res = await getAPI("search", { searchValue });
     if (res.status === 200) {
         console.log("rrrs", res)
-        return res.data;
+        return res.data as Ticket[];
     } else {
-        return {
-            error: true,
-            message: 'Failed to retrieve tickets.',
-            status: res.status,
-        };
+        throw new Error(`Error fetching tickets: ${res.error || 'Unknown error'}`);
     }
 }
