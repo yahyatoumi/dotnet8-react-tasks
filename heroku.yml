@@ -1,0 +1,16 @@
+setup:
+     addons:
+       - plan: heroku-postgresql
+   build:
+     docker:
+       web: ./nginx/Dockerfile.prod
+       backend: ./server/Dockerfile.prod
+       frontend: ./client/Dockerfile.prod
+   release:
+     command:
+       - ./release-tasks.sh
+     image: backend
+   run:
+     web: /usr/sbin/nginx -g 'daemon off;'
+     backend: dotnet server.dll
+     frontend: npm start
