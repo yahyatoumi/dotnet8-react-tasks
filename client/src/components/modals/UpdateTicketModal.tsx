@@ -1,6 +1,7 @@
 import { updateTicket } from "@/apiServices/tasks";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { updateSingleTicket } from "@/lib/newlyCreatedTickets/newlyCreatedTicketsSlice";
+import { updateSingleSearchTicket } from "@/lib/searchTickets/searchTicketsSlice";
 import { useQueryClient } from "@tanstack/react-query";
 import { FC, FormEvent, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5"
@@ -36,6 +37,18 @@ const UpdateTicketModal: FC<UpdateTicketModalProps> = ({ closeModal, ticket }) =
             status,
         }
 
+        const updateTicketInQuery = (newTicketState: Ticket) => {
+            const queryKey = ["pagination", paginationParams.page, paginationParams.pageSize]
+            queryClient.setQueryData(queryKey, (old: PaginatedResponseType) => {
+                const newItems: Ticket[] = old.items.map((item: Ticket) => item.id === ticket.id ? newTicketState : item);
+                const newqueryData: PaginatedResponseType = {
+                    ...old,
+                    items: newItems
+                }
+                return newqueryData
+            })
+        }
+
         const res = await updateTicket(ticket.id.toString(), postData)
         console.log("ressss", res)
         if (!res.error) {
@@ -46,19 +59,9 @@ const UpdateTicketModal: FC<UpdateTicketModalProps> = ({ closeModal, ticket }) =
                 status: status
             }
             console.log("new stateee", newTicketState)
-            if (ticket.newlyCreated) {
-                dispatch(updateSingleTicket(newTicketState));
-            } else {
-                const queryKey = ["pagination", paginationParams.page, paginationParams.pageSize]
-                queryClient.setQueryData(queryKey, (old: PaginatedResponseType) => {
-                    const newItems: Ticket[] = old.items.map((item: Ticket) => item.id === ticket.id ? newTicketState : item);
-                    const newqueryData: PaginatedResponseType = {
-                        ...old,
-                        items: newItems
-                    }
-                    return newqueryData
-                })
-            }
+            dispatch(updateSingleTicket(newTicketState));
+            dispatch(updateSingleSearchTicket(newTicketState))
+            updateTicketInQuery(newTicketState)
             closeModal();
         }
     }

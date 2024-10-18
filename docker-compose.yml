@@ -1,0 +1,70 @@
+services:
+  # PostgreSQL Database Service
+  postgres:
+    image: postgres:16.3
+    container_name: db
+    environment:
+      POSTGRES_USER: "yahya"
+      POSTGRES_PASSWORD: "yahyaPASSWORD"
+      POSTGRES_DB: "yahya_db"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # .NET 8 Backend Service
+  backend:
+    container_name: dotnet
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server:/app    
+      - /app/bin         
+      - /app/obj         
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    command: dotnet watch run
+
+  # Next.js Frontend Service
+  frontend:
+    container_name: next
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./client:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    networks:
+      - app-network
+    env_file:
+      - .env
+    restart: always
+
+  # Nginx Reverse Proxy Service
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  node_modules:

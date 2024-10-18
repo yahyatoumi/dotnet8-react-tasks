@@ -1,6 +1,7 @@
 import { deleteTicket } from "@/apiServices/tasks";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { removeFromNewlyCreated } from "@/lib/newlyCreatedTickets/newlyCreatedTicketsSlice";
+import { removeFromSearchTickets } from "@/lib/searchTickets/searchTicketsSlice";
 import { useQueryClient } from "@tanstack/react-query";
 import { FC } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -15,23 +16,25 @@ const DeleteTicketModal: FC<DeleteTicketModalProps> = ({ ticket, closeModal }) =
     const paginationParams = useAppSelector(state => state.paginationParams)
     const queryClient = useQueryClient()
 
+    const deleteTicketFromQuery = () => {
+        const queryKey = ["pagination", paginationParams.page, paginationParams.pageSize]
+        queryClient.setQueryData(queryKey, (old: PaginatedResponseType) => {
+            const newItems: Ticket[] = old.items.filter((item: Ticket) => item.id !== ticket.id);
+            const newqueryData: PaginatedResponseType = {
+                ...old,
+                items: newItems
+            }
+            return newqueryData
+        })
+    }
+
 
     const handleDeleteTicket = async () => {
         const res = await deleteTicket(ticket.id.toString());
         if (!res.error) {
-            if (ticket.newlyCreated) {
-                dispatch(removeFromNewlyCreated(ticket))
-            } else {
-                const queryKey = ["pagination", paginationParams.page, paginationParams.pageSize]
-                queryClient.setQueryData(queryKey, (old: PaginatedResponseType) => {
-                    const newItems: Ticket[] = old.items.filter((item: Ticket) => item.id !== ticket.id);
-                    const newqueryData: PaginatedResponseType = {
-                        ...old,
-                        items: newItems
-                    }
-                    return newqueryData
-                })
-            }
+            dispatch(removeFromNewlyCreated(ticket))
+            dispatch(removeFromSearchTickets(ticket))
+            deleteTicketFromQuery();
             closeModal();
         }
     }
