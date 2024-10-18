@@ -3,15 +3,13 @@
 import { getTicketsList } from "@/apiServices/tasks";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setPaginationParams } from "@/lib/paginationParams/paginationParamsSlice";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 const Pagination = () => {
     const paginationParams = useAppSelector((state) => state.paginationParams);
-    const { data, isLoading } = useQuery({
-        queryFn: () => getTicketsList(paginationParams.page, paginationParams.pageSize),
+    const { data } = useQuery<PaginatedResponseType | undefined>({
+        queryFn: async () => await getTicketsList(paginationParams.page, paginationParams.pageSize),
         queryKey: ["pagination", paginationParams.page, paginationParams.pageSize],
     });
     const dispatch = useAppDispatch();
@@ -24,7 +22,7 @@ const Pagination = () => {
     };
 
     const handleNavigateToNext = () => {
-        if (paginationParams.page < data?.totalPages) {
+        if (data && paginationParams.page < data?.totalPages) {
             dispatch(setPaginationParams({ ...paginationParams, page: paginationParams.page + 1 }));
         }
     };
@@ -44,8 +42,9 @@ const Pagination = () => {
     // Generate an array of page numbers
     const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
+    if (!data) return null;
+
     return (
-        data && (
             <div className="flex items-center justify-center p-4">
                 {/* Previous Page Button */}
                 <button
@@ -81,7 +80,6 @@ const Pagination = () => {
                     </svg>
                 </button>
             </div>
-        )
     );
 };
 

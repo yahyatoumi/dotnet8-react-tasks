@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { CiEdit } from "react-icons/ci";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
 import DeleteTicketModal from "../modals/DeleteTicketModal";

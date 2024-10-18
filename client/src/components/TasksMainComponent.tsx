@@ -2,14 +2,9 @@
 
 import { getTicketsList } from "@/apiServices/tasks";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { useAppDispatch, useAppSelector, useAppStore } from "@/lib/hooks";
-import { increment } from "@/lib/counter/counterSlice";
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setPaginationParams } from "@/lib/paginationParams/paginationParamsSlice";
-import { parseDate, timeAgo } from "@/helpers/dateParser";
-import { CiEdit } from "react-icons/ci";
-import TicketActionsPopUp from "./ui/TicketActionsPopUp";
 import NewTicketButton from "./ui/NewTicketButton";
 import SingleTicketRow from "./ui/SingleTicketRow";
 
@@ -46,10 +41,10 @@ const TasksMainComponent = () => {
             newPaginationParamsState.pageSize = 10
         }
         dispatch(setPaginationParams(newPaginationParamsState))
-    }, []);
+    }, [dispatch]);
 
 
-    const { data, isLoading } = useQuery({
+    const { data } = useQuery({
         queryFn: () => getTicketsList(paginationParams.page, paginationParams.pageSize),
         queryKey: ["pagination", paginationParams.page, paginationParams.pageSize],
     });
@@ -69,13 +64,13 @@ const TasksMainComponent = () => {
                 </thead>
                 <tbody>
                     {searchTickets?.map((ticket: Ticket) => (
-                        <SingleTicketRow ticket={ticket} bgColor="bg-blue-50" />
+                        <SingleTicketRow key={ticket.id} ticket={ticket} bgColor="bg-blue-50" />
                     ))}
                     {newlyCreatedTickets?.map((ticket: Ticket) => (
-                        <SingleTicketRow ticket={ticket} bgColor="bg-green-50" />
+                        <SingleTicketRow key={ticket.id} ticket={ticket} bgColor="bg-green-50" />
                     ))}
                     {data?.items?.map((ticket: Ticket) => (
-                        <SingleTicketRow ticket={ticket} bgColor="" />
+                        <SingleTicketRow key={ticket.id} ticket={ticket} bgColor="" />
                     ))}
                 </tbody>
             </table>

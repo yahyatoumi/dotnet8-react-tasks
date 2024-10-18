@@ -49,20 +49,20 @@ const UpdateTicketModal: FC<UpdateTicketModalProps> = ({ closeModal, ticket }) =
             })
         }
 
-        const res = await updateTicket(ticket.id.toString(), postData)
-        console.log("ressss", res)
-        if (!res.error) {
-            console.log("newwwww", res)
+        try {
+            await updateTicket(ticket.id.toString(), postData)
             const newTicketState = {
                 ...ticket,
                 description: description,
                 status: status
             }
-            console.log("new stateee", newTicketState)
             dispatch(updateSingleTicket(newTicketState));
             dispatch(updateSingleSearchTicket(newTicketState))
             updateTicketInQuery(newTicketState)
             closeModal();
+        }
+        catch (e) {
+            console.error("ERRRRROR:", e)
         }
     }
 

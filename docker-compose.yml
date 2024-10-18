@@ -7,8 +7,6 @@ services:
       POSTGRES_USER: "yahya"
       POSTGRES_PASSWORD: "yahyaPASSWORD"
       POSTGRES_DB: "yahya_db"
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -16,31 +14,30 @@ services:
 
   # .NET 8 Backend Service
   backend:
-    container_name: dotnet
+    container_nasme: dotnet
     build:
       context: ./server
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     volumes:
-      - ./server:/app    
-      - /app/bin         
-      - /app/obj         
+      - ./server:/app
+      - /app/bin
+      - /app/obj
     networks:
       - app-network
     depends_on:
       - postgres
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-    command: dotnet watch run
 
   # Next.js Frontend Service
   frontend:
     container_name: next
     build:
       context: ./client
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     volumes:
-      - ./client:/usr/src/app
-      - node_modules:/usr/src/app/node_modules
+      - ./client:/app
+      - /app/node_modules
     networks:
       - app-network
     env_file:
@@ -52,7 +49,7 @@ services:
     image: nginx:latest
     container_name: nginx
     ports:
-      - "80:80"
+      - "8080:8080"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:

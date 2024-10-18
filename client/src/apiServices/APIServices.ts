@@ -3,17 +3,17 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 // ------------------------------- Params Global ----------------------- //
 
 const config: AxiosRequestConfig = {
-    baseURL: "http://localhost:5286/api",
+    baseURL: "http://localhost:8080/api",
     headers: {
         'Content-Type': 'application/json',
     },
     withCredentials: true,
 };
 
-interface ReturnType {
+interface ReturnType<T = unknown, E = unknown>  {
     status: number; // status should always be a number
-    data?: any;
-    error?: any;
+    data?: T;
+    error?: E;
 }
 
 // --------------------------- POST request ------------------------------ //
