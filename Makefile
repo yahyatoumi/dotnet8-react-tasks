@@ -16,4 +16,4 @@ down:
 # Rule to build Docker containers using docker-compose build
 build:
 	@echo "Building Docker containers..."
-	docker-compose build
+	docker-compose build  --no-cache
