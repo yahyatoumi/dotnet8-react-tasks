@@ -1,31 +1,39 @@
-# Use the .NET SDK image for build
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
+WORKDIR /usr/src/app
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
-
-# Install the dotnet-ef tool
-RUN dotnet tool install --global dotnet-ef
-
-# Ensure the global tools path is added to the PATH environment variable
-ENV PATH="$PATH:/root/.dotnet/tools"
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src/aspnetapp
 
 # Copy the csproj and restore as distinct layers
 COPY *.csproj ./
 RUN dotnet restore
 
-# Copy everything else and build
-COPY . ./
-# RUN dotnet build -c Release --no-restore
+# Install the dotnet-ef tool globally
+RUN dotnet tool install --global dotnet-ef
+# Ensure the global tools path is added to the PATH environment variable
+ENV PATH="$PATH:/root/.dotnet/tools"
 
-# Publish the application to the /out directory
-RUN dotnet publish -c Release -o out
+# Copy the rest of the application and build
+COPY . .
+RUN dotnet build -c $BUILD_CONFIGURATION -o /usr/src/app/build
 
-# Use the ASP.NET runtime image for production
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
-WORKDIR /app
-COPY --from=build /app/out ./
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish -c $BUILD_CONFIGURATION -o /usr/src/app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /usr/src/app
+COPY --from=publish /usr/src/app/publish .
 
 # Expose the port that your application will run on
 EXPOSE 5286
 
+# Change permission
+COPY ./start.prod.sh .
+RUN sed -i 's/\r$//g' /usr/src/app/start.prod.sh
+RUN chmod +x /usr/src/app/start.prod.sh
+
 # Start the application
-ENTRYPOINT ["dotnet", "bin/Debug/net8.0/.dll"]  # Replace with your app's DLL name
+ENTRYPOINT ["dotnet", "server.dll"]

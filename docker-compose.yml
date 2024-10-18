@@ -7,8 +7,8 @@ services:
       POSTGRES_USER: "yahya"
       POSTGRES_PASSWORD: "yahyaPASSWORD"
       POSTGRES_DB: "yahya_db"
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -28,6 +28,8 @@ services:
       - app-network
     depends_on:
       - postgres
+    # ports:
+    #   - "5286:5286"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 
@@ -44,6 +46,10 @@ services:
       - app-network
     env_file:
       - .env
+    # ports:
+    #   - "3000:3000"
+    depends_on:
+      - backend
     restart: always
 
   # Nginx Reverse Proxy Service
@@ -54,6 +60,7 @@ services:
       - "8080:8080"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./client/.next:/usr/share/nginx/html/_next
     depends_on:
       - frontend
       - backend
