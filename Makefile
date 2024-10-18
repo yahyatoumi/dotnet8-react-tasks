@@ -6,7 +6,7 @@
 # Rule to start Docker containers using docker-compose up
 all:
 	@echo "Starting Docker containers..."
-	docker-compose up -d
+	docker-compose up --no-cache -d
 
 # Rule to stop Docker containers using docker-compose down
 down:
