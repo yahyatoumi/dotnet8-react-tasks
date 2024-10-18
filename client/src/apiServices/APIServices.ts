@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 // ------------------------------- Params Global ----------------------- //
 
 const config: AxiosRequestConfig = {
-    baseURL: "http://localhost:5286/api",
+    baseURL: "http://localhost:8080/api",
     headers: {
         'Content-Type': 'application/json',
     },
