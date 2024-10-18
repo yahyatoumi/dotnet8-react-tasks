@@ -7,6 +7,8 @@ services:
       POSTGRES_USER: "yahya"
       POSTGRES_PASSWORD: "yahyaPASSWORD"
       POSTGRES_DB: "yahya_db"
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -14,7 +16,7 @@ services:
 
   # .NET 8 Backend Service
   backend:
-    container_nasme: dotnet
+    container_name: dotnet
     build:
       context: ./server
       dockerfile: Dockerfile.prod

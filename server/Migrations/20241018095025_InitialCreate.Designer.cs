@@ -12,7 +12,7 @@ using TicketApi.Models;
 namespace server.Migrations
 {
     [DbContext(typeof(TicketContext))]
-    [Migration("20241017092842_InitialCreate")]
+    [Migration("20241018095025_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
