@@ -4,9 +4,9 @@
 .PHONY: up down build
 
 # Rule to start Docker containers using docker-compose up
-all:
+all: build
 	@echo "Starting Docker containers..."
-	docker-compose up --no-cache -d
+	docker-compose up -d
 
 # Rule to stop Docker containers using docker-compose down
 down:
