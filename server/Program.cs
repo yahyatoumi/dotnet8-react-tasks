@@ -7,7 +7,7 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 // Add services to the container.
 
 builder.Services.AddDbContext<TicketContext>(options =>
-    options.UseNpgsql("Host=127.0.0.1:5432;Port=5432;Database=yahya_db;Username=yahya;Password=yahyaPASSWORD"));
+    options.UseNpgsql("Host=postgres;Port=5432;Database=yahya_db;Username=yahya;Password=yahyaPASSWORD"));
 
 builder.Services.AddCors(options =>
 {

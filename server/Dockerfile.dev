@@ -1,6 +1,8 @@
 # Use the .NET SDK image for development
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
+
+# Set the working directory
+WORKDIR /usr/src/app
 
 # Install the dotnet-ef tool
 RUN dotnet tool install --global dotnet-ef
@@ -14,18 +16,15 @@ RUN dotnet restore
 
 # Copy everything else and build
 COPY . ./
-RUN dotnet build -c Debug --no-restore
-
-# Run the EF Core migrations
-# RUN dotnet ef migrations add InitialCreate
-# RUN dotnet ef database update
 
 # Expose the development port
 EXPOSE 5286
 
 # Add a script to handle migrations and start the app
-COPY ./start.dev.sh /app/start.sh
-RUN chmod +x /app/start.sh
+COPY ./start.dev.sh .
+RUN sed -i 's/\r$//g' /usr/src/app/start.dev.sh
+RUN chmod +x /usr/src/app/start.dev.sh
 
 # Start the application
-ENTRYPOINT ["/app/start.sh"]
+# CMD ["sleep", "infinity"]
+ENTRYPOINT ["/usr/src/app/start.dev.sh"]
