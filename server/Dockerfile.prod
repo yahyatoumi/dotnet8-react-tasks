@@ -31,9 +31,10 @@ COPY --from=publish /usr/src/app/publish .
 EXPOSE 5286
 
 # Change permission
-COPY ./start.prod.sh .
+COPY ./start.prod.sh /usr/src/app/start.prod.sh
 RUN sed -i 's/\r$//g' /usr/src/app/start.prod.sh
 RUN chmod +x /usr/src/app/start.prod.sh
 
 # Start the application
-ENTRYPOINT ["dotnet", "server.dll"]
+# CMD ["sleep", "infinity"]
+ENTRYPOINT ["/usr/src/app/start.prod.sh"]

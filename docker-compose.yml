@@ -21,7 +21,7 @@ services:
       context: ./server
       dockerfile: Dockerfile.prod
     volumes:
-      - ./server:/app
+      - ./server:/usr/src/app
       - /app/bin
       - /app/obj
     networks:
@@ -39,9 +39,9 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile.prod
-    volumes:
-      - ./client:/app
-      - /app/node_modules
+    # volumes:
+    #   - ./client:/app
+    #   - node_modules:/app/node_modules
     networks:
       - app-network
     env_file:
