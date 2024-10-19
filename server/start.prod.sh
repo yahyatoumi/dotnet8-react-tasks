@@ -1,9 +1,11 @@
 #!/bin/bash
 
 # Wait for the database to be available (optional, if needed)
-sleep 10
 
 # Apply migrations
+dotnet ef database update || echo "No migrations were applied. The database is already up to datex."
+
 
 # Start the application with hot reload
-dotnet bin/Debug/net8.0/server.dll
+# sleep infinity
+dotnet bin/release/net8.0/server.dll
