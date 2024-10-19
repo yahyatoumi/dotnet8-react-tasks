@@ -16,4 +16,6 @@ down:
 # Rule to build Docker containers using docker-compose build
 build:
 	@echo "Building Docker containers..."
+	cd server
+	dotnet publish -c Release
 	docker-compose build  --no-cache
