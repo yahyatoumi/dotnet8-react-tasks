@@ -8,6 +8,7 @@ const NewTicketButton = () => {
 
     return <>
         <button
+            data-testid="add-new-ticket-btn"
             onClick={() => setDisplayModal(true)}
             className="flex sticky top-0 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-black text-[#FFFFFF] text-sm font-bold leading-normal tracking-[0.015em]"
         >

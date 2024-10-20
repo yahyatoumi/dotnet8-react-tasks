@@ -62,7 +62,9 @@ const TasksMainComponent = () => {
                         <th className="text-white text-sm font-medium leading-normal text-center w-[4/20]">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody
+                    data-testid="tickets-list"
+                >
                     {searchTickets?.map((ticket: Ticket) => (
                         <SingleTicketRow key={ticket.id} ticket={ticket} bgColor="bg-blue-50" />
                     ))}

@@ -32,12 +32,12 @@ const NewTicketModal: FC<NewTicketModalProps> = ({ closeModal }) => {
             status,
         }
 
-        try{
+        try {
             const res = await postNewTicket(postData)
             console.log("newwwww", res)
             dispatch(addNewlyCreatedTicket(res));
             closeModal();
-        }catch(e){
+        } catch (e) {
             console.error("ERRRRROR:", e)
         }
     }
@@ -75,6 +75,7 @@ const NewTicketModal: FC<NewTicketModalProps> = ({ closeModal }) => {
                 <label className="flex flex-col min-w-40 flex-1">
                     <p className={`${decriptionError ? "text-[#C13515]" : "text-black "} text-base font-medium leading-normal pb-2`}>Ticket Description*</p>
                     <textarea
+                        data-testid="new-ticket-description-input"
                         autoFocus
                         onBlur={handleDescriptionBlur}
                         placeholder="Description"
@@ -89,14 +90,16 @@ const NewTicketModal: FC<NewTicketModalProps> = ({ closeModal }) => {
                     <select
                         className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-black focus:outline-0 focus:ring-0 border-none bg-[#EEEEEE] focus:border-none h-14 bg-[image:--select-button-svg] placeholder:text-[#6B6B6B] p-4 text-base font-normal leading-normal"
                         name="status"
+                        data-testid="new-ticket-status-select"
                     >
-                        <option value="one" disabled>Select status</option>
+                        <option value="none" disabled>Select status</option>
                         <option value="Open">Open</option>
                         <option value="Closed">Closed</option>
                     </select>
                 </label>
                 <div className="flex py-3 justify-end">
                     <button
+                        data-testid="new-ticket-submit-btn"
                         type="submit"
                         className="flex mt-6 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-black text-[#FFFFFF] text-base font-bold leading-normal tracking-[0.015em]"
                     >

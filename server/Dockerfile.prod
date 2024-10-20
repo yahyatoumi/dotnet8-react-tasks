@@ -1,40 +1,37 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
+# Stage 1: Build environment
+FROM mcr.microsoft.com/dotnet/sdk:8.0@sha256:35792ea4ad1db051981f62b313f1be3b46b1f45cadbaa3c288cd0d3056eefb83 AS build-env
 WORKDIR /usr/src/app
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src/aspnetapp
+# Copy everything
+COPY . ./
 
-# Copy the csproj and restore as distinct layers
-COPY *.csproj ./
+# Restore dependencies
 RUN dotnet restore
 
-# Install the dotnet-ef tool globally
+# Install the dotnet-ef tool globally to run migrations
 RUN dotnet tool install --global dotnet-ef
-# Ensure the global tools path is added to the PATH environment variable
+
+# Add the dotnet tools to the PATH
 ENV PATH="$PATH:/root/.dotnet/tools"
 
-# Copy the rest of the application and build
-COPY . .
-RUN dotnet build -c $BUILD_CONFIGURATION -o /usr/src/app/build
+# Run database migrations
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish -c $BUILD_CONFIGURATION -o /usr/src/app/publish /p:UseAppHost=false
+# Build and publish the app as a release
+RUN dotnet publish -c Release -o /usr/src/app/out
 
-FROM base AS final
+# Stage 2: Create the runtime image
+FROM build-env
 WORKDIR /usr/src/app
-COPY --from=publish /usr/src/app/publish .
 
-# Expose the port that your application will run on
-EXPOSE 5286
+# Copy the built app from the build environment
+COPY --from=build-env /usr/src/app/out .
 
-# Change permission
 COPY ./start.prod.sh /usr/src/app/start.prod.sh
-RUN sed -i 's/\r$//g' /usr/src/app/start.prod.sh
 RUN chmod +x /usr/src/app/start.prod.sh
 
-# Start the application
-# CMD ["sleep", "infinity"]
+# Start.prod the application
 ENTRYPOINT ["/usr/src/app/start.prod.sh"]
+
+# Run the application
+# ENTRYPOINT ["sleep", "infinity"]
+# ENTRYPOINT ["dotnet", "server.dll"]

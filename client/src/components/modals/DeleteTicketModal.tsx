@@ -65,6 +65,7 @@ const DeleteTicketModal: FC<DeleteTicketModalProps> = ({ ticket, closeModal }) =
                         Cancel
                     </button>
                     <button
+                        data-testid="delete-ticket-btn"
                         onClick={handleDeleteTicket}
                         className="bg-[#C13515] text-white px-6 py-2 rounded-xl"
                     >

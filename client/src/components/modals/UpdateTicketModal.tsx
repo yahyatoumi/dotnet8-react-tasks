@@ -119,6 +119,7 @@ const UpdateTicketModal: FC<UpdateTicketModalProps> = ({ closeModal, ticket }) =
                 </label>
                 <div className="flex py-3 justify-end">
                     <button
+                        data-testid="update-ticket-submit-btn"
                         type="submit"
                         className="flex mt-6 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-black text-[#FFFFFF] text-base font-bold leading-normal tracking-[0.015em]"
                     >
