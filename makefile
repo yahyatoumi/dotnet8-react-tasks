@@ -9,6 +9,8 @@ all: build
 	docker-compose up -d
 	@echo "program will sleep for 10 seconds just to make sure everything will work fine."
 	sleep 10
+	@echo "Installing Cypress..."
+	npm install cypress --save-dev 
 	@echo "cypress should start soon, if it has not or if an error accured try start it yourself, npx cypress run --project ./cypress"
 	@echo "to test the controller alone with xunit, dotnet test --project ./cypress"
 	npx cypress run --project ./cypress
